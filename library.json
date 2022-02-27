@@ -12,6 +12,6 @@
     "url": "https://github.com/pilotak"
   },
   "version": "1.0.1",
-  "frameworks": "arduino",
+  "frameworks": "arduino,espidf",
   "platforms": "*"
 }

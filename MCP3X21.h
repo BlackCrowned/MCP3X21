@@ -25,18 +25,30 @@ SOFTWARE.
 #ifndef MCP3X21_H
 #define MCP3X21_H
 
+#ifdef IDF_VER
+#include <driver/i2c.h>
+#endif
+
 #define MCP3X21_DEFAULT_ADDRESS 0x4D
 
 class MCP3X21 {
   public:
     explicit MCP3X21(uint8_t slave_adr);
     ~MCP3X21(void);
+    #if defined(ARDUINO)
     void init(TwoWire * i2c_obj);
+    #elif defined(IDF_VER)
+    void init(i2c_port_t i2c_port);
+    #endif
     void init();
     
   protected:
     uint16_t read();
+    #if defined(ARDUINO)
     TwoWire * _i2c;
+    #elif defined(IDF_VER)
+    i2c_port_t _i2c_port = I2C_NUM_0;
+    #endif
     const uint8_t _address;
     
 };
@@ -44,15 +56,17 @@ class MCP3X21 {
 class MCP3021 : public MCP3X21 {
   public:
     uint16_t read();
+    float readVoltage(float vref);
     explicit MCP3021(uint8_t slave_adr = MCP3X21_DEFAULT_ADDRESS);
-    uint16_t toVoltage(uint16_t data, uint32_t vref);
+    float toVoltage(uint16_t data, float vref);
 };
 
 class MCP3221 : public MCP3X21 {
   public:
     uint16_t read();
+    float readVoltage(float vref);
     explicit MCP3221(uint8_t slave_adr = MCP3X21_DEFAULT_ADDRESS);
-    uint16_t toVoltage(uint16_t data, uint32_t vref);
+    float toVoltage(uint16_t data, float vref);
 };
 
 #endif  // MCP3X21_H
