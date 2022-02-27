@@ -33,5 +33,24 @@ void loop() {
 
     delay(1000);
 }
+```
 
+## Example setup for ESP-IDF
+```cpp
+#include <driver/i2c.h>
+
+void setup() {
+    i2c_config_t config = {};
+    config = i2c_config_t{
+        .mode = i2c_mode_t::I2C_MODE_MASTER,
+        .sda_io_num = GPIO_NUM_21,
+        .scl_io_num = GPIO_NUM_22,
+        .sda_pullup_en = GPIO_PULLUP_ENABLE,
+        .scl_pullup_en = GPIO_PULLUP_ENABLE,
+        .master = {.clk_speed = 100000},
+        .clk_flags = 0
+    };
+    i2c_param_config(I2C_NUM_0, &config);
+    i2c_driver_install(I2C_NUM_0, i2c_mode_t::I2C_MODE_MASTER, 0, 0, ESP_INTR_FLAG_LEVEL3);
+}
 ```
